@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sudoku Solver</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<h1>Sudoku Solver</h1>
+<div id="sudoku-container"></div>
+<button onclick="solveSudoku()">Solve</button>
+
+<script>
+  function solveSudoku() {
+    let board = [];
+    let cells = document.querySelectorAll('.cell input');
+    cells.forEach((cell, index) => {
+      if (cell.value === '') {
+        board.push(0);
+      } else {
+        board.push(parseInt(cell.value));
+      }
+    });
+
+    if (solve(board)) {
+      cells.forEach((cell, index) => {
+        cell.value = board[index];
+      });
+    } else {
+      alert('No solution exists for the given Sudoku board.');
+    }
+  }
+
+  function solve(board) {
+    const emptySpot = findEmptySpot(board);
+    if (!emptySpot) {
+      return true;
+    } else {
+      const [row, col] = emptySpot;
+      for (let num = 1; num <= 9; num++) {
+        if (isValid(board, num, row, col)) {
+          board[row * 9 + col] = num;
+          if (solve(board)) {
+            return true;
+          }
+          board[row * 9 + col] = 0;
+        }
+      }
+      return false;
+    }
+  }
+
+  function findEmptySpot(board) {
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === 0) {
+        return [Math.floor(i / 9), i % 9];
+      }
+    }
+    return null;
+  }
+
+  function isValid(board, num, row, col) {
+    for (let i = 0; i < 9; i++) {
+      if (board[row * 9 + i] === num && i !== col) {
+        return false;
+      }
+    }
+    for (let i = 0; i < 9; i++) {
+      if (board[i * 9 + col] === num && i !== row) {
+        return false;
+      }
+    }
+    const startRow = Math.floor(row / 3) * 3;
+    const startCol = Math.floor(col / 3) * 3;
+    for (let i = startRow; i < startRow + 3; i++) {
+      for (let j = startCol; j < startCol + 3; j++) {
+        if (board[i * 9 + j] === num && (i !== row || j !== col)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  const container = document.getElementById('sudoku-container');
+  for (let i = 0; i < 81; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.maxLength = 1;
+    cell.appendChild(input);
+    container.appendChild(cell);
+  }
+</script>
+</body>
+</html>
