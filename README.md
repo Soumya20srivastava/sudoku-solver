@@ -18,3 +18,4 @@ JavaScript has special functions to solve the Sudoku puzzle. It starts by findin
 Then, it tries different numbers in that spot, one by one. For each number, it checks if it's allowed according to Sudoku rules. If it's not allowed, it tries the next number.
 It keeps trying different numbers until it finds one that works. If it can't find any valid numbers, it goes back and tries a different number in the previous spot. This is called backtracking.
 It keeps doing this until the puzzle is solved or until it realizes there's no solution.
+thats it
